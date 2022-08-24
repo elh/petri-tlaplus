@@ -4,7 +4,7 @@
 \*
 \* Definition 1. A net is a tuple N = (P, T, F) where
 \*   1. P and T are disjoint finite sets of places and transitions, respectively.
-\*   2. F\subseteq (P\times T)\cup (T\times P) is a set of (directed) arcs (or flow relations).
+\*   2. F\subseteq(P\times T)\cup(T\times P) is a set of (directed) arcs (or flow relations).
 \*
 \* Definition 4. A Petri net is a net of the form PN = (N, M, W), which extends the elementary
 \* net so that
@@ -24,6 +24,15 @@ Places == {"start", "end"}
 Transitions == {"t1"}
 Arcs == [start |-> "t1", t1 |-> "end"]
 
+TypeInvariant == /\ Places \in SUBSET STRING
+                 /\ Transitions \in SUBSET STRING
+                 /\ \A a \in DOMAIN Arcs : a \in STRING /\ Arcs[a] \in STRING
+
+\* TODO: make this an assumption when these are constants
+ModelInvariant == /\ Places \intersect Transitions = {}
+                  /\ \A a \in DOMAIN Arcs : \/ (a \in Places /\ Arcs[a] \in Transitions)
+                                            \/ (a \in Transitions /\ Arcs[a] \in Places)
+
 Init == marking = [start |-> 1, end |-> 0]
 
 \* fire hardcoded start place
@@ -40,6 +49,7 @@ ReachableEnd == <>(marking.end = 1)
 \* TODO
 \* [x] data structures for petri net (hardcoded)
 \* [x] implement "firing" (hardcoded)
+\* [x] invariants
 \* [ ] make module parameterized
 \* [ ] make "firing" parameterized
 \* [ ] create a simple specification or module that instantiates a petri net
