@@ -21,20 +21,35 @@ VARIABLES marking
 
 vars == << marking >>
 
-\* hardcoded, simple, demo petri net. start -> t1 -> end
+\* TODO: push this hardcoded, simple, demo petri net to a concrete instantiation module
 Places == {"start", "end"}
 Transitions == {"t1"}
 Arcs == [start |-> {"t1"}, t1 |-> {"end"}]
+InitialMarking == [start |-> 1]
+
+\**********************************************************************************
+\* Invariants
+\**********************************************************************************
 
 TypeInvariant == /\ Places \in SUBSET STRING
                  /\ Transitions \in SUBSET STRING
                  /\ \A k \in DOMAIN Arcs : k \in STRING /\ Arcs[k] \in SUBSET STRING
-                 \* TODO: invariant for marking
+                 /\ \A p \in DOMAIN InitialMarking : p \in STRING /\ InitialMarking[p] \in Int
+                 \* variables
+                 /\ \A p \in DOMAIN marking : p \in STRING /\ marking[p] \in Int
 
-\* TODO: make this an assumption when these are constants
 ModelInvariant == /\ Places \intersect Transitions = {}
                   /\ \A k \in DOMAIN Arcs : \/ (k \in Places /\ Arcs[k] \subseteq Transitions)
                                             \/ (k \in Transitions /\ Arcs[k] \subseteq Places)
+                  /\ \A k \in DOMAIN InitialMarking : k \in Places /\ InitialMarking[k] \geq 0
+                  \* variables
+                  /\ \A k \in DOMAIN marking : k \in Places /\ marking[k] \geq 0
+
+Invariants == TypeInvariant /\ ModelInvariant
+
+\**********************************************************************************
+\* Operators
+\**********************************************************************************
 
 InputPlaces(t) == {k \in DOMAIN Arcs : t \in Arcs[k]}
 
@@ -47,22 +62,29 @@ Fire(t) == /\ Enabled(t)
                          [p \in OutputPlaces(t) |-> marking[p] + 1] @@
                          marking
 
-\* TODO: parameterize
-Init == marking = [start |-> 1, end |-> 0]
+\**********************************************************************************
+\* Spec
+\**********************************************************************************
+
+Init == marking = InitialMarking @@ [p \in Places |-> 0]
 
 Next == \E t \in Transitions : Fire(t)
 
 Spec == Init /\ [][Next]_vars /\ WF_vars(Next)
 
 \**********************************************************************************
-\* Properties of Petri Nets
+\* Properties
 \**********************************************************************************
 
-\* TODO: parameterize
-ReachableEnd == <>(marking.end > 0)
+\* This is a weak, specific notion of Reachability of markings. For testing
+ReachablePlace(p) == <>(marking[p] > 0)
+
+\* TODO: this lives in the higher order module or concrete instantiation module
+ReachableEnd == ReachablePlace("end")
 
 \**********************************************************************************
 \* TODO
+\*
 \* [x] data structures for petri net (hardcoded)
 \* [x] implement "firing" (hardcoded)
 \* [x] invariants
