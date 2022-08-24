@@ -15,6 +15,8 @@
 \*      arc multiplicity.
 (******************************************************************************)
 
+EXTENDS Integers, TLC
+
 VARIABLES marking
 
 vars == << marking >>
@@ -22,36 +24,48 @@ vars == << marking >>
 \* hardcoded, simple, demo petri net. start -> t1 -> end
 Places == {"start", "end"}
 Transitions == {"t1"}
+\* TODO: oops! this should be string -> set of string...
 Arcs == [start |-> "t1", t1 |-> "end"]
 
 TypeInvariant == /\ Places \in SUBSET STRING
                  /\ Transitions \in SUBSET STRING
                  /\ \A a \in DOMAIN Arcs : a \in STRING /\ Arcs[a] \in STRING
+                 \* TODO: invariant for marking
 
 \* TODO: make this an assumption when these are constants
 ModelInvariant == /\ Places \intersect Transitions = {}
                   /\ \A a \in DOMAIN Arcs : \/ (a \in Places /\ Arcs[a] \in Transitions)
                                             \/ (a \in Transitions /\ Arcs[a] \in Places)
 
+IncomingPlaces(t) == {k \in DOMAIN Arcs : Arcs[k] = t}
+
+\* TODO: fix after we fix type of Arcs
+OutgoingPlaces(t) == {Arcs[t]}
+
+Enabled(t) == \A p \in IncomingPlaces(t) : marking[p] > 0
+
+Fire(t) == /\ Enabled(t)
+           /\ marking' = [p \in IncomingPlaces(t) |-> marking[p] - 1] @@
+                         [p \in OutgoingPlaces(t) |-> marking[p] + 1] @@
+                         marking
+
+\* TODO: parameterize
 Init == marking = [start |-> 1, end |-> 0]
 
-\* fire hardcoded start place
-Fire == /\ marking.start = 1
-        /\ marking' = [marking EXCEPT !.start = 0, !.end = 1]
-
-Next == Fire
+Next == \E t \in Transitions : Fire(t)
 
 Spec == Init /\ [][Next]_vars /\ WF_vars(Next)
 
-ReachableEnd == <>(marking.end = 1)
+\* TODO: parameterize
+ReachableEnd == <>(marking.end > 0)
 
 (******************************************************************************)
 \* TODO
 \* [x] data structures for petri net (hardcoded)
 \* [x] implement "firing" (hardcoded)
 \* [x] invariants
+\* [x] implement real "firing"
 \* [ ] make module parameterized
-\* [ ] make "firing" parameterized
 \* [ ] create a simple specification or module that instantiates a petri net
 \* [ ] validate a simple property (example: reachability)
 (******************************************************************************)
