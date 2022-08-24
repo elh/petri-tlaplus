@@ -13,39 +13,40 @@
 \*      configuration and is commonly described with reference to Petri net diagrams as a marking.
 \*   3. W : F → Z is an arc multiset, so that the count (or weight) for each arc is a measure of the
 \*      arc multiplicity.
+\*
+\*
+\* `.NOTE: arc counts (or weights) is currently unsupported..'
 \**********************************************************************************
 
 LOCAL INSTANCE Integers
 LOCAL INSTANCE TLC
 
-CONSTANTS Places, Transitions, Arcs, InitialMarking
+\* Instantiate PetriNet with Places, Transitions, Arcs, and Marking.
+
+CONSTANTS Places, Transitions, Arcs
 ConstantsInvariant == /\ Places \in SUBSET STRING
                       /\ Transitions \in SUBSET STRING
                       /\ \A k \in DOMAIN Arcs : /\ k \in STRING
                                                 /\ Arcs[k] \in SUBSET STRING
-                      /\ \A p \in DOMAIN InitialMarking : /\ p \in STRING
-                                                          /\ InitialMarking[p] \in Int
 ASSUME ConstantsInvariant
 
-VARIABLES marking
-
-vars == << marking >>
+\* Instantiate with the initial marking. Every place in Places must be in the record Marking.
+VARIABLES Marking
+vars == << Marking >>
 
 \**********************************************************************************
 \* Invariants
 \**********************************************************************************
 
 TypeInvariant == /\ ConstantsInvariant
-                 \* variables
-                 /\ \A p \in DOMAIN marking : p \in STRING /\ marking[p] \in Int
+                 /\ \A p \in DOMAIN Marking : /\ p \in STRING
+                                              /\ Marking[p] \in Int
 
 ModelInvariant == /\ Places \intersect Transitions = {}
                   /\ \A k \in DOMAIN Arcs : \/ (k \in Places /\ Arcs[k] \subseteq Transitions)
                                             \/ (k \in Transitions /\ Arcs[k] \subseteq Places)
-                  /\ \A k \in DOMAIN InitialMarking : /\ k \in Places
-                                                      /\ InitialMarking[k] \geq 0
-                  \* variables
-                  /\ \A k \in DOMAIN marking : k \in Places /\ marking[k] \geq 0
+                  /\ \A k \in DOMAIN Marking : k \in Places /\ Marking[k] \geq 0
+                  /\ DOMAIN Marking = Places
 
 Invariants == TypeInvariant /\ ModelInvariant
 
@@ -57,18 +58,18 @@ InputPlaces(t) == {k \in DOMAIN Arcs : t \in Arcs[k]}
 
 OutputPlaces(t) == Arcs[t]
 
-Enabled(t) == \A p \in InputPlaces(t) : marking[p] > 0
+Enabled(t) == \A p \in InputPlaces(t) : Marking[p] > 0
 
 Fire(t) == /\ Enabled(t)
-           /\ marking' = [p \in InputPlaces(t) |-> marking[p] - 1] @@
-                         [p \in OutputPlaces(t) |-> marking[p] + 1] @@
-                         marking
+           /\ Marking' = [p \in InputPlaces(t) |-> Marking[p] - 1] @@
+                         [p \in OutputPlaces(t) |-> Marking[p] + 1] @@
+                         Marking
 
 \**********************************************************************************
 \* Spec
 \**********************************************************************************
 
-Init == marking = InitialMarking @@ [p \in Places |-> 0]
+Init == TRUE = TRUE
 
 Next == \E t \in Transitions : Fire(t)
 
@@ -78,7 +79,7 @@ Spec == Init /\ [][Next]_vars /\ WF_vars(Next)
 \* Properties
 \**********************************************************************************
 
-\* This is a poor, specific notion of Reachability of markings. Added for easy, early testing
-ReachablePlace(p) == <>(marking[p] > 0)
+\* A weak notion of "Reachability" specific to a place, not the entire marking.
+ReachablePlace(p) == <>(Marking[p] > 0)
 
-================================================================================
+===================================================================================
