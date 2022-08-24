@@ -18,8 +18,14 @@
 LOCAL INSTANCE Integers
 LOCAL INSTANCE TLC
 
-\* TODO: ASSUME some basic type invariants?
 CONSTANTS Places, Transitions, Arcs, InitialMarking
+ConstantsInvariant == /\ Places \in SUBSET STRING
+                      /\ Transitions \in SUBSET STRING
+                      /\ \A k \in DOMAIN Arcs : /\ k \in STRING
+                                                /\ Arcs[k] \in SUBSET STRING
+                      /\ \A p \in DOMAIN InitialMarking : /\ p \in STRING
+                                                          /\ InitialMarking[p] \in Int
+ASSUME ConstantsInvariant
 
 VARIABLES marking
 
@@ -29,12 +35,7 @@ vars == << marking >>
 \* Invariants
 \**********************************************************************************
 
-TypeInvariant == /\ Places \in SUBSET STRING
-                 /\ Transitions \in SUBSET STRING
-                 /\ \A k \in DOMAIN Arcs : /\ k \in STRING
-                                           /\ Arcs[k] \in SUBSET STRING
-                 /\ \A p \in DOMAIN InitialMarking : /\ p \in STRING
-                                                     /\ InitialMarking[p] \in Int
+TypeInvariant == /\ ConstantsInvariant
                  \* variables
                  /\ \A p \in DOMAIN marking : p \in STRING /\ marking[p] \in Int
 
