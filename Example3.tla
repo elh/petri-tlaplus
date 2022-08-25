@@ -33,17 +33,14 @@ Arcs == [
 
     t1 |-> {"p1", "p2"},
     t2 |-> {"p3"},
-    t3 |-> {"p4"}
+    t3 |-> {"p4"},
     t4 |-> {"sink"}
 ]
 
-Marking == [start |-> 1] @@ [p \in Places |-> 0] (* Define the initial marking. *)
+Marking == [source |-> 1] @@ [p \in Places |-> 0] (* Define the initial marking. *)
 
 INSTANCE PetriNet (* Instantiate it within a namespace. *)
 
-\* Spec == PN!Spec
-
-\* Invariants == PN!Invariants
 -----------------------------------------------------------------------------------
 \**********************************************************************************
 \* Properties
