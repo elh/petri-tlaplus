@@ -110,6 +110,8 @@ Reachable(m) == <>(Marking = m @@ [p \in Places |-> 0])
 \* A weak notion of "Reachability" specific to a place, not the entire marking.
 ReachablePlace(p) == <>(Marking[p] > 0)
 
+Bound(k) == [](\A p \in DOMAIN Marking : Marking[p] \leq k)
+
 \* Optional restrictions on the structure of Petri Nets.
 
 IsStateMachine == /\ \A t \in Transitions : /\ Cardinality(Inputs(t)) = 1
