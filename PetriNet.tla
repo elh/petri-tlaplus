@@ -64,15 +64,16 @@ Invariants == TypeInvariant /\ ModelInvariant
 \* Operators
 \**********************************************************************************
 
-InputPlaces(t) == {k \in DOMAIN Arcs : t \in Arcs[k]}
+\* Input and output places and transitions for transitions and places respectively.
+Inputs(v) == {k \in DOMAIN Arcs : v \in Arcs[k]}
+Outputs(v) == IF v \in DOMAIN Arcs THEN Arcs[v] ELSE {}
 
-OutputPlaces(t) == IF t \in DOMAIN Arcs THEN Arcs[t] ELSE {}
-
-Enabled(t) == \A p \in InputPlaces(t) : Marking[p] > 0
+Enabled(t) == /\ t \in Transitions
+              /\ \A p \in Inputs(t) : Marking[p] > 0
 
 Fire(t) == /\ Enabled(t)
-           /\ Marking' = [p \in InputPlaces(t) |-> Marking[p] - 1] @@
-                         [p \in OutputPlaces(t) |-> Marking[p] + 1] @@
+           /\ Marking' = [p \in Inputs(t) |-> Marking[p] - 1] @@
+                         [p \in Outputs(t) |-> Marking[p] + 1] @@
                          Marking
 
 \* Helpers (many taken from "Learn TLA+" and CommunityModules).
@@ -111,9 +112,12 @@ ReachablePlace(p) == <>(Marking[p] > 0)
 
 \* Optional restrictions on the structure of Petri Nets.
 
-IsStateMachine == /\ \A t \in Transitions : /\ Cardinality(InputPlaces(t)) = 1
-                                            /\ Cardinality(OutputPlaces(t)) = 1
+IsStateMachine == /\ \A t \in Transitions : /\ Cardinality(Inputs(t)) = 1
+                                            /\ Cardinality(Outputs(t)) = 1
                   /\ [](\A p \in DOMAIN Marking : SumRecordValues(Marking) = 1)
+
+IsMarkedGraph == /\ \A p \in Places : /\ Cardinality(Inputs(p)) = 1
+                                      /\ Cardinality(Outputs(p)) = 1
 
 \* TODO: implement more!
 
