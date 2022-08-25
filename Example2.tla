@@ -13,14 +13,21 @@ LOCAL INSTANCE TLC
 
 Places == {"source", "p1", "sink"} (* Define the bad net. *)
 Transitions == {"t1"}
-Arcs == [source |-> {"t1"}, p1 |-> {"t1"}, t1 |-> {"sink"}]
-Marking == [source |-> 1] @@ [p \in Places |-> 0] (* Define the initial marking. *)
+Arcs == [
+    source |-> {"t1"},
+    p1 |-> {"t1"},
+
+    t1 |-> {"sink"}
+]
+InitialMarking == [source |-> 1]
+VARIABLE Marking
 
 PN == INSTANCE PetriNet (* Instantiate it within a namespace. *)
 
-Spec == PN!Spec
+Spec == PN!Spec (* Make Spec and Invariants available for the config file. *)
 
 Invariants == PN!Invariants
+
 -----------------------------------------------------------------------------------
 \**********************************************************************************
 \* Properties

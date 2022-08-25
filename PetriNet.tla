@@ -21,17 +21,21 @@
 LOCAL INSTANCE Integers
 LOCAL INSTANCE TLC
 
-\* Instantiate PetriNet with Places, Transitions, Arcs, and Marking.
+\**********************************************************************************
+\* Instantiate PetriNet with (Places, Transitions, Arcs, InitialMarking) constants and Marking variable.
+\* Marking variable only need to be declared by the user of this module.
+\**********************************************************************************
 
-CONSTANTS Places, Transitions, Arcs
+CONSTANTS Places, Transitions, Arcs, InitialMarking
 ConstantsInvariant == /\ Places \in SUBSET STRING
                       /\ Transitions \in SUBSET STRING
                       /\ \A k \in DOMAIN Arcs : /\ k \in STRING
                                                 /\ Arcs[k] \in SUBSET STRING
+                      /\ \A p \in DOMAIN InitialMarking : /\ p \in STRING
+                                                          /\ InitialMarking[p] \in Int
 ASSUME ConstantsInvariant
 
-\* Instantiate with the initial marking. Every place in Places must be in the record Marking.
-VARIABLES Marking
+VARIABLE Marking
 vars == << Marking >>
 
 \**********************************************************************************
@@ -45,6 +49,7 @@ TypeInvariant == /\ ConstantsInvariant
 ModelInvariant == /\ Places \intersect Transitions = {}
                   /\ \A k \in DOMAIN Arcs : \/ (k \in Places /\ Arcs[k] \subseteq Transitions)
                                             \/ (k \in Transitions /\ Arcs[k] \subseteq Places)
+                  /\ \A k \in DOMAIN InitialMarking : k \in Places /\ InitialMarking[k] \geq 0
                   /\ \A k \in DOMAIN Marking : k \in Places /\ Marking[k] \geq 0
                   /\ DOMAIN Marking = Places
 
@@ -56,7 +61,7 @@ Invariants == TypeInvariant /\ ModelInvariant
 
 InputPlaces(t) == {k \in DOMAIN Arcs : t \in Arcs[k]}
 
-OutputPlaces(t) == Arcs[t]
+OutputPlaces(t) == IF t \in DOMAIN Arcs THEN Arcs[t] ELSE {}
 
 Enabled(t) == \A p \in InputPlaces(t) : Marking[p] > 0
 
@@ -69,8 +74,7 @@ Fire(t) == /\ Enabled(t)
 \* Spec
 \**********************************************************************************
 
-Init == TRUE = TRUE
-
+Init == Marking = InitialMarking @@ [p \in Places |-> 0]
 Next == \E t \in Transitions : Fire(t)
 
 Spec == Init /\ [][Next]_vars /\ WF_vars(Next)

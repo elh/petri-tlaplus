@@ -1,9 +1,3 @@
-TODO: Fix me! Currently buggy...
-
-This passes if t4 |-> "sink" arc is removed or if marking is just p1 |-> 1.
-I think this is related to sloppiness around temporal properties and allowing deadlocking. Faults
-are in PetriNet itself.
-
 ------------------------------- MODULE Example3 -----------------------------------
 \**********************************************************************************
 \* Parallelize and synchronize flow through a Petri Net. This makes Petri Nets very useful for
@@ -36,10 +30,14 @@ Arcs == [
     t3 |-> {"p4"},
     t4 |-> {"sink"}
 ]
+InitialMarking == [source |-> 1]
+VARIABLE Marking
 
-Marking == [source |-> 1] @@ [p \in Places |-> 0] (* Define the initial marking. *)
+PN == INSTANCE PetriNet (* Instantiate it within a namespace. *)
 
-INSTANCE PetriNet (* Instantiate it within a namespace. *)
+Spec == PN!Spec (* Make Spec and Invariants available for the config file. *)
+
+Invariants == PN!Invariants
 
 -----------------------------------------------------------------------------------
 \**********************************************************************************
@@ -48,6 +46,6 @@ INSTANCE PetriNet (* Instantiate it within a namespace. *)
 
 \* Eventually, a token is present in place "sink".
 \* A weak notion of "Reachability" specific to a place, not the entire marking.
-ReachableSink == ReachablePlace("sink") (* Defined using PetriNet module operators. *)
+ReachableSink == PN!ReachablePlace("sink") (* Defined using PetriNet module operators. *)
 
 ===================================================================================
