@@ -1,3 +1,5 @@
+See example specifications that use this module.
+
 ------------------------------- MODULE PetriNet -----------------------------------
 \**********************************************************************************
 \* from "Formal definition and basic terminology" https://en.wikipedia.org/wiki/Petri_net
@@ -22,18 +24,18 @@ LOCAL INSTANCE Integers
 LOCAL INSTANCE TLC
 
 \**********************************************************************************
-\* Instantiate PetriNet with (Places, Transitions, Arcs, InitialMarking) constants and Marking variable.
-\* Marking variable only need to be declared by the user of this module.
+\* Instantiate PetriNet with (`Places', `Transitions', `Arcs', `InitialMarking') constants and (`Marking')
+\* variable. `Marking' variable should be declared but not assigned by users of this module.
 \**********************************************************************************
 
 CONSTANTS Places, Transitions, Arcs, InitialMarking
-ConstantsInvariant == /\ Places \in SUBSET STRING
-                      /\ Transitions \in SUBSET STRING
-                      /\ \A k \in DOMAIN Arcs : /\ k \in STRING
-                                                /\ Arcs[k] \in SUBSET STRING
-                      /\ \A p \in DOMAIN InitialMarking : /\ p \in STRING
-                                                          /\ InitialMarking[p] \in Int
-ASSUME ConstantsInvariant
+ConstsInvariant == /\ Places \in SUBSET STRING
+                   /\ Transitions \in SUBSET STRING
+                   /\ \A k \in DOMAIN Arcs : /\ k \in STRING
+                                             /\ Arcs[k] \in SUBSET STRING
+                   /\ \A p \in DOMAIN InitialMarking : /\ p \in STRING
+                                                       /\ InitialMarking[p] \in Int
+ASSUME ConstsInvariant
 
 VARIABLE Marking
 vars == << Marking >>
@@ -42,14 +44,15 @@ vars == << Marking >>
 \* Invariants
 \**********************************************************************************
 
-TypeInvariant == /\ ConstantsInvariant
+TypeInvariant == /\ ConstsInvariant
                  /\ \A p \in DOMAIN Marking : /\ p \in STRING
                                               /\ Marking[p] \in Int
 
 ModelInvariant == /\ Places \intersect Transitions = {}
                   /\ \A k \in DOMAIN Arcs : \/ (k \in Places /\ Arcs[k] \subseteq Transitions)
                                             \/ (k \in Transitions /\ Arcs[k] \subseteq Places)
-                  /\ \A k \in DOMAIN InitialMarking : k \in Places /\ InitialMarking[k] \geq 0
+                  /\ \A k \in DOMAIN InitialMarking : /\ k \in Places
+                                                      /\ InitialMarking[k] \geq 0
                   /\ \A k \in DOMAIN Marking : k \in Places /\ Marking[k] \geq 0
                   /\ DOMAIN Marking = Places
 
@@ -85,5 +88,7 @@ Spec == Init /\ [][Next]_vars /\ WF_vars(Next)
 
 \* A weak notion of "Reachability" specific to a place, not the entire marking.
 ReachablePlace(p) == <>(Marking[p] > 0)
+
+\* TODO: implement more!
 
 ===================================================================================

@@ -9,14 +9,12 @@ Install the [TLA+ tools](https://lamport.azurewebsites.net/tla/standalone-tools.
 ```
 # model check a simple, example Petri Net.
 tlc -deadlock Example1
+tlc -deadlock Example3
 
 # read pretty printed specifications (*.ps files).
 tlatex -shade PetriNet
 tlatex -shade Example1
+tlatex -shade Example3
 ```
-
-## Status
-
-WIP!
 
 🕸️
