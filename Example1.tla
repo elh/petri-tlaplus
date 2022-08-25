@@ -33,6 +33,9 @@ Invariants == PN!Invariants
 
 \* Eventually, a token is present in place "sink".
 \* A weak notion of "Reachability" specific to a place, not the entire marking.
-ReachableSink == PN!ReachablePlace("sink") (* Defined using PetriNet module operators. *)
+ReachableSink == PN!ReachablePlace("sink")
+
+\* Eventually, we arrive as a expected final marking.
+ReachableFinalMarking == PN!Reachable([sink |-> 1])
 
 ===================================================================================

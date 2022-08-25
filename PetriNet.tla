@@ -86,6 +86,8 @@ Spec == Init /\ [][Next]_vars /\ WF_vars(Next)
 \* Properties
 \**********************************************************************************
 
+Reachable(m) == <>(Marking = m @@ [p \in Places |-> 0])
+
 \* A weak notion of "Reachability" specific to a place, not the entire marking.
 ReachablePlace(p) == <>(Marking[p] > 0)
 
