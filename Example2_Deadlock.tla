@@ -1,22 +1,23 @@
-------------------------------- MODULE Example4 -----------------------------------
+--------------------------- MODULE Example2_Deadlock ------------------------------
 \**********************************************************************************
-\* A marked graph.
+\* Example of a net where tokens can never make it to a sink place. "t1" will never be able
+\* to fire because all input places will not have a token ("p1" will never have a token).
 \*
 \* `.            ------
-\*    source -> |  t1  | --
-\*      ^        ------    |
-\*       ------------------
-\*                           .'
+\*    source -> |  t1  | -> sink
+\*               ------
+\*        p1 ------^            .'
 \**********************************************************************************
 
 LOCAL INSTANCE TLC
 
-Places == {"source"} (* Define the net. *)
+Places == {"source", "p1", "sink"} (* Define the bad net. *)
 Transitions == {"t1"}
 Arcs == [
     source |-> {"t1"},
+    p1 |-> {"t1"},
 
-    t1 |-> {"source"}
+    t1 |-> {"sink"}
 ]
 InitialMarking == [source |-> 1]
 VARIABLE Marking
@@ -32,6 +33,7 @@ Invariants == PN!Invariants
 \* Properties
 \**********************************************************************************
 
-IsMarkedGraph == PN!IsMarkedGraph
+\* Eventually, we arrive as a expected final marking.
+ReachableFinalMarking == PN!Reachable([sink |-> 1])
 
 ===================================================================================

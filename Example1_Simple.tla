@@ -1,21 +1,19 @@
-------------------------------- MODULE Example2 -----------------------------------
+---------------------------- MODULE Example1_Simple -------------------------------
 \**********************************************************************************
-\* Example of a net where tokens can never make it to a sink place. "t1" will never be able
-\* to fire because all input places will not have a token ("p1" will never have a token).
+\* Instantiate and model check a simple Petri Net. The net has a source place, a sink place,
+\* 1 transition, and an initial marking with 1 token in the source place.
 \*
 \* `.            ------
 \*    source -> |  t1  | -> sink
-\*               ------
-\*        p1 ------^            .'
+\*               ------        .'
 \**********************************************************************************
 
 LOCAL INSTANCE TLC
 
-Places == {"source", "p1", "sink"} (* Define the bad net. *)
+Places == {"source", "sink"} (* Define the net. *)
 Transitions == {"t1"}
 Arcs == [
     source |-> {"t1"},
-    p1 |-> {"t1"},
 
     t1 |-> {"sink"}
 ]
@@ -33,7 +31,15 @@ Invariants == PN!Invariants
 \* Properties
 \**********************************************************************************
 
+\* Eventually, a token is present in place "sink".
+\* A weak notion of "Reachability" specific to a place, not the entire marking.
+ReachableSink == PN!ReachablePlace("sink")
+
 \* Eventually, we arrive as a expected final marking.
 ReachableFinalMarking == PN!Reachable([sink |-> 1])
+
+BoundOne == PN!Bound(1)
+
+IsStateMachine == PN!IsStateMachine
 
 ===================================================================================

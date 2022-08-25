@@ -1,4 +1,4 @@
-------------------------------- MODULE Example3 -----------------------------------
+----------------------------- MODULE Example3_Parallel ----------------------------
 \**********************************************************************************
 \* Parallelize and synchronize flow through a Petri Net. This makes Petri Nets very useful for
 \* modelling distributed systems. In this example some properties include that both "t2" and

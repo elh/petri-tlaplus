@@ -1,20 +1,20 @@
-# petri-tlaplus
+# petri-tlaplus 🕸️
 
-TLA+ modules and specifications for [Petri Nets](https://en.wikipedia.org/wiki/Petri_net).
+TLA+ module for [Petri Nets](https://en.wikipedia.org/wiki/Petri_net). Petri Nets are a simple and natural abstraction for modelling stepwise processes, concurrency, and stateful distributed systems.
+
+Instantiate the `PetriNet` module to model a specific graph and assert temporal properties about all it's possible executions!
 
 ## Try it
 
 Install the [TLA+ tools](https://lamport.azurewebsites.net/tla/standalone-tools.html).
 
 ```
-# model check a simple, example Petri Net.
-tlc -deadlock Example1
-tlc -deadlock Example3
+# Model check Petri Nets.
+tlc -deadlock Example1_Simple
+tlc -deadlock Example3_Parallel
 
-# read pretty printed specifications (*.ps files).
-tlatex -shade PetriNet
-tlatex -shade Example1
-tlatex -shade Example3
+# Read pretty-printed specifications (.ps files).
+tlatex -shade PetriNet           # the core module
+tlatex -shade Example1_Simple
+tlatex -shade Example3_Parallel
 ```
-
-🕸️

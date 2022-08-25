@@ -1,21 +1,22 @@
-------------------------------- MODULE Example1 -----------------------------------
+------------------------- MODULE Example4_MarkedGraph -----------------------------
 \**********************************************************************************
-\* Instantiate and model check a simple Petri Net. The net has a source place, a sink place,
-\* 1 transition, and an initial marking with 1 token in the source place.
+\* A marked graph.
 \*
 \* `.            ------
-\*    source -> |  t1  | -> sink
-\*               ------        .'
+\*    source -> |  t1  | --
+\*      ^        ------    |
+\*       ------------------
+\*                           .'
 \**********************************************************************************
 
 LOCAL INSTANCE TLC
 
-Places == {"source", "sink"} (* Define the net. *)
+Places == {"source"} (* Define the net. *)
 Transitions == {"t1"}
 Arcs == [
     source |-> {"t1"},
 
-    t1 |-> {"sink"}
+    t1 |-> {"source"}
 ]
 InitialMarking == [source |-> 1]
 VARIABLE Marking
@@ -31,15 +32,6 @@ Invariants == PN!Invariants
 \* Properties
 \**********************************************************************************
 
-\* Eventually, a token is present in place "sink".
-\* A weak notion of "Reachability" specific to a place, not the entire marking.
-ReachableSink == PN!ReachablePlace("sink")
-
-\* Eventually, we arrive as a expected final marking.
-ReachableFinalMarking == PN!Reachable([sink |-> 1])
-
-BoundOne == PN!Bound(1)
-
-IsStateMachine == PN!IsStateMachine
+IsMarkedGraph == PN!IsMarkedGraph
 
 ===================================================================================
