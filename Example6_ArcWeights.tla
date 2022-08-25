@@ -1,24 +1,30 @@
----------------------------- MODULE Example1_Simple -------------------------------
+-------------------------- MODULE Example6_ArcWeights -----------------------------
 \**********************************************************************************
-\* Instantiate and model check a simple Petri Net. The net has a source place, a sink place,
-\* 1 transition, and an initial marking with 1 token in the source place.
+\* Petri Net with arc weights. A weight represents how many tokens must be consumed from
+\* input places and how many tokens will be produced at output places when a transition
+\* fires. Unspecified arc weights default to 1.
 \*
-\* `.            ------
-\*    source -> |  t1  | -> sink
-\*               ------        .'
+\* `.                ------
+\*    source --2--> |  t1  | --3--> sink
+\*                   ------  -----> other .'
 \**********************************************************************************
 
 LOCAL INSTANCE TLC
 
-Places == {"source", "sink"} (* Define the net. *)
+Places == {"source", "sink", "other"} (* Define the net. *)
 Transitions == {"t1"}
 Arcs == [
     source |-> {"t1"},
 
-    t1 |-> {"sink"}
+    t1 |-> {"sink", "other"}
 ]
-ArcWeights == <<>> \* Unspecified arc weights default to 1.
-InitialMarking == [source |-> 1]
+\* Unspecified arc weights default to 1.
+ArcWeights == <<
+    \* from, to, weight
+    <<"source", "t1", 2>>,
+    <<"t1", "sink", 3>>
+>>
+InitialMarking == [source |-> 2]
 VARIABLE Marking
 
 PN == INSTANCE PetriNet (* Instantiate it within a namespace. *)
@@ -33,10 +39,6 @@ Invariants == PN!Invariants
 \**********************************************************************************
 
 \* Eventually, we arrive as a expected final marking.
-ReachableFinalMarking == PN!Reachable([sink |-> 1])
-
-BoundOne == PN!Bound(1)
-
-IsStateMachine == PN!IsStateMachine
+ReachableFinalMarking == PN!Reachable([sink |-> 3, other |-> 1])
 
 ===================================================================================

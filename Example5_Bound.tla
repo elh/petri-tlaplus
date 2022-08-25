@@ -30,6 +30,7 @@ Arcs == [
     t3 |-> {"p1"},
     t4 |-> {"p1"}
 ]
+ArcWeights == <<>> \* Unspecified arc weights default to 1.
 InitialMarking == [p2 |-> 2, p3 |-> 2]
 VARIABLE Marking
 
