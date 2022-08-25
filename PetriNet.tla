@@ -21,6 +21,8 @@ See example specifications that use this module.
 \**********************************************************************************
 
 LOCAL INSTANCE Integers
+LOCAL INSTANCE Sequences
+LOCAL INSTANCE FiniteSets
 LOCAL INSTANCE TLC
 
 \**********************************************************************************
@@ -73,6 +75,22 @@ Fire(t) == /\ Enabled(t)
                          [p \in OutputPlaces(t) |-> Marking[p] + 1] @@
                          Marking
 
+\* Helpers (many taken from "Learn TLA+" and CommunityModules).
+
+RangeStruct(struct) == {struct[key]: key \in DOMAIN struct}
+
+SumSeq(s) == LET
+  RECURSIVE Helper(_)
+  Helper(s_) == IF s_ = <<>> THEN 0 ELSE
+  Head(s_) + Helper(Tail(s_))
+IN Helper(s)
+
+IsInjective(s) == \A i, j \in DOMAIN s: (s[i] = s[j]) => (i = j)
+
+SetToSeq(S) == CHOOSE f \in [1..Cardinality(S) -> S] : IsInjective(f)
+
+SumRecordValues(r) == SumSeq(SetToSeq(RangeStruct(r)))
+
 \**********************************************************************************
 \* Spec
 \**********************************************************************************
@@ -90,6 +108,12 @@ Reachable(m) == <>(Marking = m @@ [p \in Places |-> 0])
 
 \* A weak notion of "Reachability" specific to a place, not the entire marking.
 ReachablePlace(p) == <>(Marking[p] > 0)
+
+\* Optional restrictions on the structure of Petri Nets.
+
+IsStateMachine == /\ \A t \in Transitions : /\ Cardinality(InputPlaces(t)) = 1
+                                            /\ Cardinality(OutputPlaces(t)) = 1
+                  /\ [](\A p \in DOMAIN Marking : SumRecordValues(Marking) = 1)
 
 \* TODO: implement more!
 

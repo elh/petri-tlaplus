@@ -38,4 +38,6 @@ ReachableSink == PN!ReachablePlace("sink")
 \* Eventually, we arrive as a expected final marking.
 ReachableFinalMarking == PN!Reachable([sink |-> 1])
 
+IsStateMachine == PN!IsStateMachine
+
 ===================================================================================
