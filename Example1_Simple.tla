@@ -33,7 +33,7 @@ Invariants == PN!Invariants
 
 \* Eventually, a token is present in place "sink".
 \* A weak notion of "Reachability" specific to a place, not the entire marking.
-ReachableSink == PN!ReachablePlace("sink")
+ReachableSink == PN!ReachablePlace("sink", 1)
 
 \* Eventually, we arrive as a expected final marking.
 ReachableFinalMarking == PN!Reachable([sink |-> 1])

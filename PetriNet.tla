@@ -93,7 +93,7 @@ Spec == Init /\ [][Next]_vars /\ WF_vars(Next)
 Reachable(m) == <>(Marking = m @@ [p \in Places |-> 0])
 
 \* A weak notion of "Reachability" specific to a place, not the entire marking.
-ReachablePlace(p) == <>(Marking[p] > 0)
+ReachablePlace(p, c) == <>(Marking[p] = c)
 
 Bound(k) == [](\A p \in DOMAIN Marking : Marking[p] \leq k)
 
@@ -101,7 +101,7 @@ Bound(k) == [](\A p \in DOMAIN Marking : Marking[p] \leq k)
 
 IsStateMachine == /\ \A t \in Transitions : /\ Cardinality(Inputs(t)) = 1
                                             /\ Cardinality(Outputs(t)) = 1
-                  /\ [](\A p \in DOMAIN Marking : BagSum(Marking) = 1)
+                  /\ [](BagSum(Marking) = 1)
 
 IsMarkedGraph == /\ \A p \in Places : /\ Cardinality(Inputs(p)) = 1
                                       /\ Cardinality(Outputs(p)) = 1
