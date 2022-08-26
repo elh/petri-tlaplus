@@ -15,6 +15,17 @@ See example specifications that use this module.
 \*      configuration and is commonly described with reference to Petri net diagrams as a marking.
 \*   3. W : F → Z is an arc multiset, so that the count (or weight) for each arc is a measure of the
 \*      arc multiplicity.
+\*
+\* * firing a transition t in a marking M consumes W(s,t) tokens from each of its input places s,
+\*   and produces W(t,s) tokens in each of its output places s
+\* * a transition is enabled (it may fire) in M if there are enough tokens in its input places for
+\*   the consumptions to be possible, i.e. if and only if \forall s: M(s) \geq W(s,t).
+\**********************************************************************************
+
+\**********************************************************************************
+\* Instantiate PetriNet with (`Places', `Transitions', `Arcs', `InitialMarking', `ArcWeights')
+\* constants and (`Marking') variable. `Marking' variable should be declared but not assigned
+\* by users of this module.
 \**********************************************************************************
 
 LOCAL INSTANCE Integers
@@ -22,12 +33,6 @@ LOCAL INSTANCE Sequences
 LOCAL INSTANCE FiniteSets
 LOCAL INSTANCE Helpers
 LOCAL INSTANCE TLC
-
-\**********************************************************************************
-\* Instantiate PetriNet with (`Places', `Transitions', `Arcs', `InitialMarking', `ArcWeights')
-\* constants and (`Marking') variable. `Marking' variable should be declared but not assigned
-\* by users of this module.
-\**********************************************************************************
 
 CONSTANTS Places, Transitions, Arcs, InitialMarking, ArcWeights
 ConstsInvariant == /\ Places \in SUBSET STRING
@@ -45,6 +50,7 @@ ASSUME ConstsInvariant
 VARIABLE Marking
 vars == << Marking >>
 
+-----------------------------------------------------------------------------------
 \**********************************************************************************
 \* Invariants
 \**********************************************************************************
@@ -93,15 +99,6 @@ Fire(t) == /\ Enabled(t)
                          Marking
 
 \**********************************************************************************
-\* Spec
-\**********************************************************************************
-
-Init == Marking = InitialMarking @@ [p \in Places |-> 0]
-Next == \E t \in Transitions : Fire(t)
-
-Spec == Init /\ [][Next]_vars /\ WF_vars(Next)
-
-\**********************************************************************************
 \* Properties
 \**********************************************************************************
 
@@ -119,5 +116,15 @@ IsMarkedGraph == /\ \A p \in Places : /\ Cardinality(Inputs(p)) = 1
                                       /\ Cardinality(Outputs(p)) = 1
 
 \* TODO: implement more!
+
+-----------------------------------------------------------------------------------
+\**********************************************************************************
+\* Spec
+\**********************************************************************************
+
+Init == Marking = InitialMarking @@ [p \in Places |-> 0]
+Next == \E t \in Transitions : Fire(t)
+
+Spec == Init /\ [][Next]_vars /\ WF_vars(Next)
 
 ===================================================================================
