@@ -30,6 +30,7 @@ Arcs == [
     t3 |-> {"p4"},
     t4 |-> {"sink"}
 ]
+ArcWeights == <<>> \* Unspecified arc weights default to 1.
 InitialMarking == [source |-> 1]
 VARIABLE Marking
 

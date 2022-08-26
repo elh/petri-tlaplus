@@ -16,8 +16,16 @@ See example specifications that use this module.
 \*   3. W : F → Z is an arc multiset, so that the count (or weight) for each arc is a measure of the
 \*      arc multiplicity.
 \*
-\*
-\* `.NOTE: arc counts (or weights) is currently unsupported..'
+\* * firing a transition t in a marking M consumes W(s,t) tokens from each of its input places s,
+\*   and produces W(t,s) tokens in each of its output places s
+\* * a transition is enabled (it may fire) in M if there are enough tokens in its input places for
+\*   the consumptions to be possible, i.e. if and only if \forall s: M(s) \geq W(s,t).
+\**********************************************************************************
+
+\**********************************************************************************
+\* Instantiate PetriNet with (`Places', `Transitions', `Arcs', `InitialMarking', `ArcWeights')
+\* constants and (`Marking') variable. `Marking' variable should be declared but not assigned
+\* by users of this module.
 \**********************************************************************************
 
 LOCAL INSTANCE Integers
@@ -26,23 +34,23 @@ LOCAL INSTANCE FiniteSets
 LOCAL INSTANCE Helpers
 LOCAL INSTANCE TLC
 
-\**********************************************************************************
-\* Instantiate PetriNet with (`Places', `Transitions', `Arcs', `InitialMarking') constants and (`Marking')
-\* variable. `Marking' variable should be declared but not assigned by users of this module.
-\**********************************************************************************
-
-CONSTANTS Places, Transitions, Arcs, InitialMarking
+CONSTANTS Places, Transitions, Arcs, InitialMarking, ArcWeights
 ConstsInvariant == /\ Places \in SUBSET STRING
                    /\ Transitions \in SUBSET STRING
                    /\ \A k \in DOMAIN Arcs : /\ k \in STRING
                                              /\ Arcs[k] \in SUBSET STRING
                    /\ \A p \in DOMAIN InitialMarking : /\ p \in STRING
                                                        /\ InitialMarking[p] \in Int
+                   /\ \A i \in 1..Len(ArcWeights) : /\ Len(ArcWeights[i]) = 3
+                                                    /\ ArcWeights[i][1] \in STRING
+                                                    /\ ArcWeights[i][2] \in STRING
+                                                    /\ ArcWeights[i][3] \in Int
 ASSUME ConstsInvariant
 
 VARIABLE Marking
 vars == << Marking >>
 
+-----------------------------------------------------------------------------------
 \**********************************************************************************
 \* Invariants
 \**********************************************************************************
@@ -56,6 +64,12 @@ ModelInvariant == /\ Places \intersect Transitions = {}
                                             \/ (k \in Transitions /\ Arcs[k] \subseteq Places)
                   /\ \A k \in DOMAIN InitialMarking : /\ k \in Places
                                                       /\ InitialMarking[k] \geq 0
+                  /\ \A i \in 1..Len(ArcWeights) :
+                        /\ \/ /\ ArcWeights[i][1] \in Places
+                              /\ ArcWeights[i][2] \in Transitions
+                           \/ /\ ArcWeights[i][1] \in Transitions
+                              /\ ArcWeights[i][2] \in Places
+                        /\ ArcWeights[i][3] \geq 1
                   /\ \A k \in DOMAIN Marking : k \in Places /\ Marking[k] \geq 0
                   /\ DOMAIN Marking = Places
 
@@ -69,31 +83,26 @@ Invariants == TypeInvariant /\ ModelInvariant
 Inputs(v) == {k \in DOMAIN Arcs : v \in Arcs[k]}
 Outputs(v) == IF v \in DOMAIN Arcs THEN Arcs[v] ELSE {}
 
+\* Unspecified arc weights default to 1.
+ArcWeight(from, to) == LET
+    match(w) == w[1] = from /\ w[2] = to
+    ws == SelectSeq(ArcWeights, match)
+IN
+    IF Len(ws) > 0 THEN ws[1][3] ELSE 1
+
 Enabled(t) == /\ t \in Transitions
-              /\ \A p \in Inputs(t) : Marking[p] > 0
+              /\ \A p \in Inputs(t) : Marking[p] \geq ArcWeight(p, t)
 
 Fire(t) == /\ Enabled(t)
-           /\ Marking' = [p \in Inputs(t) |-> Marking[p] - 1] @@
-                         [p \in Outputs(t) |-> Marking[p] + 1] @@
+           /\ Marking' = [p \in Inputs(t) |-> Marking[p] - ArcWeight(p, t)] @@
+                         [p \in Outputs(t) |-> Marking[p] + ArcWeight(t, p)] @@
                          Marking
-
-\**********************************************************************************
-\* Spec
-\**********************************************************************************
-
-Init == Marking = InitialMarking @@ [p \in Places |-> 0]
-Next == \E t \in Transitions : Fire(t)
-
-Spec == Init /\ [][Next]_vars /\ WF_vars(Next)
 
 \**********************************************************************************
 \* Properties
 \**********************************************************************************
 
 Reachable(m) == <>(Marking = m @@ [p \in Places |-> 0])
-
-\* A weak notion of "Reachability" specific to a place, not the entire marking.
-ReachablePlace(p, c) == <>(Marking[p] = c)
 
 Bound(k) == [](\A p \in DOMAIN Marking : Marking[p] \leq k)
 
@@ -107,5 +116,15 @@ IsMarkedGraph == /\ \A p \in Places : /\ Cardinality(Inputs(p)) = 1
                                       /\ Cardinality(Outputs(p)) = 1
 
 \* TODO: implement more!
+
+-----------------------------------------------------------------------------------
+\**********************************************************************************
+\* Spec
+\**********************************************************************************
+
+Init == Marking = InitialMarking @@ [p \in Places |-> 0]
+Next == \E t \in Transitions : Fire(t)
+
+Spec == Init /\ [][Next]_vars /\ WF_vars(Next)
 
 ===================================================================================
