@@ -2,7 +2,7 @@
 
 TLA+ module for [Petri Nets](https://en.wikipedia.org/wiki/Petri_net). Petri Nets are a simple and natural abstraction for modelling stepwise processes, concurrency, and stateful distributed systems.
 
-Instantiate the `PetriNet` module to model a specific graph and assert temporal properties about all it's possible executions!
+Instantiate the `PetriNet` module to model a specific graph and assert temporal properties about all its possible executions!
 
 ## Try it
 
