@@ -23,6 +23,7 @@ See example specifications that use this module.
 LOCAL INSTANCE Integers
 LOCAL INSTANCE Sequences
 LOCAL INSTANCE FiniteSets
+LOCAL INSTANCE Helpers
 LOCAL INSTANCE TLC
 
 \**********************************************************************************
@@ -76,22 +77,6 @@ Fire(t) == /\ Enabled(t)
                          [p \in Outputs(t) |-> Marking[p] + 1] @@
                          Marking
 
-\* Helpers (many taken from "Learn TLA+" and CommunityModules).
-
-RangeStruct(struct) == {struct[key]: key \in DOMAIN struct}
-
-SumSeq(s) == LET
-  RECURSIVE Helper(_)
-  Helper(s_) == IF s_ = <<>> THEN 0 ELSE
-  Head(s_) + Helper(Tail(s_))
-IN Helper(s)
-
-IsInjective(s) == \A i, j \in DOMAIN s: (s[i] = s[j]) => (i = j)
-
-SetToSeq(S) == CHOOSE f \in [1..Cardinality(S) -> S] : IsInjective(f)
-
-SumRecordValues(r) == SumSeq(SetToSeq(RangeStruct(r)))
-
 \**********************************************************************************
 \* Spec
 \**********************************************************************************
@@ -116,7 +101,7 @@ Bound(k) == [](\A p \in DOMAIN Marking : Marking[p] \leq k)
 
 IsStateMachine == /\ \A t \in Transitions : /\ Cardinality(Inputs(t)) = 1
                                             /\ Cardinality(Outputs(t)) = 1
-                  /\ [](\A p \in DOMAIN Marking : SumRecordValues(Marking) = 1)
+                  /\ [](\A p \in DOMAIN Marking : BagSum(Marking) = 1)
 
 IsMarkedGraph == /\ \A p \in Places : /\ Cardinality(Inputs(p)) = 1
                                       /\ Cardinality(Outputs(p)) = 1
