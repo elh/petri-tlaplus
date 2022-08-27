@@ -31,8 +31,8 @@ See example specifications that use this module.
 LOCAL INSTANCE Integers
 LOCAL INSTANCE Sequences
 LOCAL INSTANCE FiniteSets
-LOCAL INSTANCE Helpers
 LOCAL INSTANCE TLC
+LOCAL INSTANCE Helpers
 
 CONSTANTS Places, Transitions, Arcs, InitialMarking, ArcWeights
 ConstsInvariant == /\ Places \in SUBSET STRING

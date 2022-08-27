@@ -18,15 +18,22 @@ SetToSeq(s) == LET
 IN Helper(s)
 
 \**********************************************************************************
-\* Sum a sequence.
+\* Left fold a sequence.
 \**********************************************************************************
-SumSeq(s) == LET
+FoldLSeq(fn(_,_), initVal, s) == LET
     RECURSIVE Helper(_)
     Helper(s_) ==
         IF s_ = <<>>
-        THEN 0
-        ELSE Head(s_) + Helper(Tail(s_))
+        THEN initVal
+        ELSE fn(Head(s_), Helper(Tail(s_)))
 IN Helper(s)
+
+\**********************************************************************************
+\* Sum a sequence.
+\**********************************************************************************
+SumSeq(s) == LET
+    add(a, b) == a + b
+IN FoldLSeq(add, 0, s)
 
 \**********************************************************************************
 \* Sum the counts of a Bag.
