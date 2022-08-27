@@ -1,4 +1,4 @@
--------------------------- MODULE Example6_ArcWeights -----------------------------
+-------------------------- MODULE Example7_ArcWeights -----------------------------
 \**********************************************************************************
 \* Petri Net with arc weights. A weight represents how many tokens must be consumed from
 \* input places and how many tokens will be produced at output places when a transition
@@ -8,8 +8,6 @@
 \*    source --2--> |  t1  | --3--> sink
 \*                   ------  -----> other .'
 \**********************************************************************************
-
-LOCAL INSTANCE TLC
 
 Places == {"source", "sink", "other"} (* Define the net. *)
 Transitions == {"t1"}

@@ -9,8 +9,6 @@
 \*        p1 ------^            .'
 \**********************************************************************************
 
-LOCAL INSTANCE TLC
-
 Places == {"source", "p1", "sink"} (* Define the bad net. *)
 Transitions == {"t1"}
 Arcs == [

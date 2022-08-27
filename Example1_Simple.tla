@@ -8,8 +8,6 @@
 \*               ------        .'
 \**********************************************************************************
 
-LOCAL INSTANCE TLC
-
 Places == {"source", "sink"} (* Define the net. *)
 Transitions == {"t1"}
 Arcs == [
