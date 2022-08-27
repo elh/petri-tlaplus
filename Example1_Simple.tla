@@ -32,8 +32,11 @@ Invariants == PN!Invariants
 \* Properties
 \**********************************************************************************
 
-\* Eventually, we arrive as a expected final marking.
-ReachableFinalMarking == PN!Reachable([sink |-> 1])
+\* Eventually, we arrive as a expected final marking...
+ReachableMarking == PN!Reachable([sink |-> 1])
+
+\* and we never leave it.
+FinalMarking == PN!FinalMarking([sink |-> 1])
 
 BoundOne == PN!Bound(1)
 

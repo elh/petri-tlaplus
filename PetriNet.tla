@@ -47,6 +47,7 @@ ConstsInvariant == /\ Places \in SUBSET STRING
                                                     /\ ArcWeights[i][3] \in Int
 ASSUME ConstsInvariant
 
+\* Marking is a Bag where the domain is Places and the range is Int \geq 0.
 VARIABLE Marking
 vars == << Marking >>
 
@@ -79,6 +80,9 @@ Invariants == TypeInvariant /\ ModelInvariant
 \* Operators
 \**********************************************************************************
 
+\* Hydrate a marking bag with all missing Places mapped to 0.
+M^* == M @@ [p \in Places |-> 0]
+
 \* Input and output places and transitions for transitions and places respectively.
 Inputs(v) == {k \in DOMAIN Arcs : v \in Arcs[k]}
 Outputs(v) == IF v \in DOMAIN Arcs THEN Arcs[v] ELSE {}
@@ -102,7 +106,9 @@ Fire(t) == /\ Enabled(t)
 \* Properties
 \**********************************************************************************
 
-Reachable(m) == <>(Marking = m @@ [p \in Places |-> 0])
+Reachable(m) == <>(Marking = m^*)
+
+FinalMarking(m) == <>[](Marking = m^*)
 
 Bound(k) == [](\A p \in DOMAIN Marking : Marking[p] \leq k)
 
@@ -122,7 +128,7 @@ IsMarkedGraph == /\ \A p \in Places : /\ Cardinality(Inputs(p)) = 1
 \* Spec
 \**********************************************************************************
 
-Init == Marking = InitialMarking @@ [p \in Places |-> 0]
+Init == Marking = InitialMarking^*
 Next == \E t \in Transitions : Fire(t)
 
 Spec == Init /\ [][Next]_vars /\ WF_vars(Next)

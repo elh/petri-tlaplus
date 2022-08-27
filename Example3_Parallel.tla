@@ -46,7 +46,7 @@ Invariants == PN!Invariants
 \**********************************************************************************
 
 \* Eventually, we arrive as a expected final marking.
-ReachableFinalMarking == PN!Reachable([sink |-> 1])
+FinalMarking == PN!FinalMarking([sink |-> 1])
 
 \* IsStateMachine property would not hold.
 
