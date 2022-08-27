@@ -49,4 +49,6 @@ P1LeadToSink1 == Marking = PN!^*([p1 |-> 1]) ~> Marking = PN!^*([sink1 |-> 1])
 
 IsStateMachine == PN!IsStateMachine
 
+IsFreeChoiceNet == PN!IsFreeChoiceNet
+
 ===================================================================================

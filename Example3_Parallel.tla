@@ -48,4 +48,6 @@ FinalMarking == PN!FinalMarking([sink |-> 1])
 
 \* IsStateMachine property would not hold.
 
+IsFreeChoiceNet == PN!IsFreeChoiceNet
+
 ===================================================================================
