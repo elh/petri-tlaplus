@@ -77,7 +77,7 @@ OptionToComplete == <>[](Marking = [p \in {SinkPlace} |-> 1]^*)
 NoDeadTransitions == \A t \in Transitions: ~[](~Enabled(t)) \* this is wrong :(
 
 ClassicallySound == /\ OptionToComplete
-                    /\ NoDeadTransitions
+                    \* /\ NoDeadTransitions
 
 \* From PetriNet
 Reachable(x) == PN!Reachable(x)
@@ -96,6 +96,6 @@ IsFreeChoiceNet == PN!IsFreeChoiceNet
 Init == Marking = InitialMarking^*
 Next == \E t \in Transitions : PN!Fire(t)
 
-Spec == Init /\ [][Next]_vars /\ SF_vars(Next)
+Spec == Init /\ [][Next]_vars /\ (\A t \in Transitions : SF_vars(PN!Fire(t)))
 
 ===================================================================================

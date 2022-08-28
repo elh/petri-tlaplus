@@ -14,17 +14,30 @@ LOCAL INSTANCE TLC
 \* ]
 
 \* \* net that breaks NoDeadTransitions. we can't check across all behaviors
-Places == {"source", "p1", "p2", "sink"}
-Transitions == {"t1", "t2", "t3", "t4"}
+\* this doesn't pass right now
+\* Places == {"source", "p1", "p2", "sink"}
+\* Transitions == {"t1", "t2", "t3", "t4"}
+\* Arcs == [
+\*     source |-> {"t1", "t2"},
+\*     p1 |-> {"t3"},
+\*     p2 |-> {"t4"},
+
+\*     t1 |-> {"p1"},
+\*     t2 |-> {"p2"},
+\*     t3 |-> {"sink"},
+\*     t4 |-> {"sink"}
+\* ]
+
+\* requires strong fairness to show "option to complete"
+Places == {"source", "p1", "sink"}
+Transitions == {"t1", "t2", "t3"}
 Arcs == [
     source |-> {"t1", "t2"},
     p1 |-> {"t3"},
-    p2 |-> {"t4"},
 
-    t1 |-> {"p1"},
-    t2 |-> {"p2"},
-    t3 |-> {"sink"},
-    t4 |-> {"sink"}
+    t1 |-> {"sink"},
+    t2 |-> {"p1"},
+    t3 |-> {"source"}
 ]
 SourcePlace == "source"
 SinkPlace == "sink"
