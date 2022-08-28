@@ -80,6 +80,12 @@ Invariants == TypeInvariant /\ ModelInvariant
 \* Operators
 \**********************************************************************************
 
+\* Bags module's (+) except it can take invalid "bags" where counts might not be >0.
+B1 (+) B2  ==
+  [e \in (DOMAIN B1) \cup (DOMAIN B2) |->
+      (IF e \in DOMAIN B1 THEN B1[e] ELSE 0)
+    + (IF e \in DOMAIN B2 THEN B2[e] ELSE 0) ]
+
 \* Hydrate a marking bag with all missing Places mapped to 0.
 M^* == M @@ [p \in Places |-> 0]
 
@@ -98,9 +104,9 @@ Enabled(t) == /\ t \in Transitions
               /\ \A p \in Inputs(t) : Marking[p] \geq ArcWeight(p, t)
 
 Fire(t) == /\ Enabled(t)
-           /\ Marking' = [p \in Inputs(t) |-> Marking[p] - ArcWeight(p, t)] @@
-                         [p \in Outputs(t) |-> Marking[p] + ArcWeight(t, p)] @@
-                         Marking
+           /\ Marking' = Marking (+)
+                         [p \in Inputs(t) |-> 0 - ArcWeight(p, t)] (+)
+                         [p \in Outputs(t) |-> ArcWeight(t, p)]
 
 \**********************************************************************************
 \* Properties
