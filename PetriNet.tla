@@ -123,7 +123,7 @@ IsMarkedGraph == \A p \in Places : /\ Cardinality(Inputs(p)) = 1
 
 IsFreeChoiceNet == \A k \in DOMAIN Arcs \cap Places :
                         \/ Cardinality(Outputs(k)) = 1
-                        \/ Cardinality(Inputs(Arcs[k])) = 1
+                        \/ \A t \in Arcs[k] : Cardinality(Inputs(t)) = 1
 
 \* TODO: implement more!
 
