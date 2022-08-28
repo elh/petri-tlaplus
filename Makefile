@@ -10,4 +10,15 @@ tlc:
 	tlc -deadlock Example6_Bound
 	tlc -deadlock Example7_ArcWeights
 
-.PHONY: clean tlcall
+tlatex:
+	tlatex -shade PetriNet
+	tlatex -shade Helpers
+	tlatex -shade Example1_Simple
+	tlatex -shade Example2_Deadlock
+	tlatex -shade Example3_Parallel
+	tlatex -shade Example4_Choice
+	tlatex -shade Example5_MarkedGraph
+	tlatex -shade Example6_Bound
+	tlatex -shade Example7_ArcWeights
+
+.PHONY: clean tlc tlatex
