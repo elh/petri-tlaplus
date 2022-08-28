@@ -33,4 +33,6 @@ Invariants == PN!Invariants
 
 IsMarkedGraph == PN!IsMarkedGraph
 
+FinalMarking == PN!FinalMarking([source |-> 1])
+
 ===================================================================================
