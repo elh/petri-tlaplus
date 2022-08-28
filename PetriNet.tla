@@ -135,6 +135,6 @@ IsFreeChoiceNet == \A k \in DOMAIN Arcs \cap Places :
 Init == Marking = InitialMarking^*
 Next == \E t \in Transitions : Fire(t)
 
-Spec == Init /\ [][Next]_vars /\ WF_vars(Next)
+Spec == Init /\ [][Next]_vars /\ (\A t \in Transitions : WF_vars(Fire(t)))
 
 ===================================================================================
