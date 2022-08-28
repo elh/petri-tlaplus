@@ -41,6 +41,7 @@ ConstsInvariant == /\ Places \in SUBSET STRING
                                              /\ Arcs[k] \in SUBSET STRING
                    /\ \A p \in DOMAIN InitialMarking : /\ p \in STRING
                                                        /\ InitialMarking[p] \in Int
+                   (* An arc weight is a tuple of (from node, to node, weight) *)
                    /\ \A i \in 1..Len(ArcWeights) : /\ Len(ArcWeights[i]) = 3
                                                     /\ ArcWeights[i][1] \in STRING
                                                     /\ ArcWeights[i][2] \in STRING
