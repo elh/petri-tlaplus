@@ -80,12 +80,6 @@ Invariants == TypeInvariant /\ ModelInvariant
 \* Operators
 \**********************************************************************************
 
-\* Bags module's (+) except it can take invalid "bags" where counts might not be >0.
-B1 (+) B2  ==
-  [e \in (DOMAIN B1) \cup (DOMAIN B2) |->
-      (IF e \in DOMAIN B1 THEN B1[e] ELSE 0)
-    + (IF e \in DOMAIN B2 THEN B2[e] ELSE 0) ]
-
 \* Hydrate a marking bag with all missing Places mapped to 0.
 M^* == M @@ [p \in Places |-> 0]
 
