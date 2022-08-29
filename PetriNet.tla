@@ -84,7 +84,7 @@ Invariants == TypeInvariant /\ ModelInvariant
 \* Hydrate a marking bag with all missing Places mapped to 0.
 M^* == M @@ [p \in Places |-> 0]
 
-\* Input and output places and transitions for transitions and places respectively.
+\* (Input and output) places and transitions for transitions and places respectively.
 Inputs(v) == {k \in DOMAIN Arcs : v \in Arcs[k]}
 Outputs(v) == IF v \in DOMAIN Arcs THEN Arcs[v] ELSE {}
 
