@@ -1,5 +1,5 @@
 clean: ## Remove the not-checked-in generated files
-	@rm -f *.aux *.dvi *.log *.ps *.pdf *.tex *.out
+	@rm -f *.aux *.dvi *.log *.ps *.pdf *.tex *.out *.dot
 
 tlc:
 	tlc -deadlock Example1_Simple
