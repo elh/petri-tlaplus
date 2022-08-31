@@ -3,7 +3,7 @@ clean: ## Remove the not-checked-in generated files
 
 tlc:
 	tlc -deadlock Example1_Simple
-	-tlc -deadlock Example2_Deadlock # expect error here
+	tlc -deadlock Example2_Deadlock; test $$? -gt 0 # expect error here
 	tlc -deadlock Example3_Parallel
 	tlc -deadlock Example4_Choice
 	tlc -deadlock Example5_MarkedGraph
