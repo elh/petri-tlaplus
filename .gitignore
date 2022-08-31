@@ -6,5 +6,6 @@ states/
 *.ps
 *.pdf
 *.tex
+*.dot
 
 scratch/
