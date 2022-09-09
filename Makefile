@@ -7,8 +7,9 @@ tlc:
 	tlc -deadlock Example3_Parallel
 	tlc -deadlock Example4_Choice
 	tlc -deadlock Example5_MarkedGraph
-	tlc -deadlock Example6_Bound
+	tlc Example6_Bound
 	tlc -deadlock Example7_ArcWeights
+	tlc Example8_Dining
 
 tlatex:
 	tlatex -shade PetriNet
@@ -20,5 +21,6 @@ tlatex:
 	tlatex -shade Example5_MarkedGraph
 	tlatex -shade Example6_Bound
 	tlatex -shade Example7_ArcWeights
+	tlatex -shade Example8_Dining
 
 .PHONY: clean tlc tlatex
