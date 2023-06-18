@@ -13,18 +13,16 @@ Install the [TLA+ tools](https://lamport.azurewebsites.net/tla/standalone-tools.
 tlc -deadlock Example1_Simple
 tlc -deadlock Example3_Parallel
 
-# Read pretty-printed specifications (.ps files).
-tlatex -shade PetriNet           # the core module
-tlatex -shade Example1_Simple
-tlatex -shade Example3_Parallel
+# Generate LaTeX PDF docs. See the `docs/` dir
+tlatex -shade -latexCommand "pdflatex" -latexOutputExt "pdf" -metadir "docs" PetriNet
 
 # Visualize the state graph using graphviz (*.dot files).
-tlc -deadlock Example6_Bound -dump dot out
+tlc -deadlock Example6_Bound -dump dot Example6_Bound
 
 # Check all specification via make targets
-make tlc       # model check all examples
-make tlatex    # pretty-print all modules
-make clean
+make tlc       # model check all modules
+make tlatex    # pretty-print all modules to `docs/`
+make clean     # delete all generated files
 ```
 
 See `PetriNet.tla` for the core module. See the `Example_*.tla`/`Example_*.cfg` files for usage and an introduction to some Petri net concepts.
