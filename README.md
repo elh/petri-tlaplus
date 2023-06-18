@@ -27,8 +27,15 @@ make clean     # delete all generated files
 
 See `PetriNet.tla` for the core module. See the `Example_*.tla`/`Example_*.cfg` files for usage and an introduction to some Petri net concepts.
 
-## Excerpt: Transition "Fire" Action
+## Petri Net Specification
+
+Excerpts of the constant and variable definitions and the core "Fire" action. See [`docs/PetriNet.pdf`](https://github.com/elh/petri-tlaplus/blob/main/docs/PetriNet.pdf) and [`docs/`](https://github.com/elh/petri-tlaplus/tree/main/docs) dir for the full LaTeX pretty-printed specification and more examples.
 
 <p align="center">
-    <img src="https://github.com/elh/petri-tlaplus/assets/1035393/e826c059-84f4-4836-87c6-62e53df056f0">
+    <img src="https://github.com/elh/petri-tlaplus/assets/1035393/9785d20e-8be7-47e7-b9ff-eb892384b1c3">
 </p>
+<p align="center">
+    <img src="https://github.com/elh/petri-tlaplus/assets/1035393/1474a3d6-13d2-4934-80d0-7195b7245fd4">
+</p>
+
+Note that the "Workflow net" specifications are incomplete due to a limitation of the TLA+ model checker.

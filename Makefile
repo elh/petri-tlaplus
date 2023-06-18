@@ -7,9 +7,11 @@ tlc:
 	tlc -deadlock Example3_Parallel
 	tlc -deadlock Example4_Choice
 	tlc -deadlock Example5_MarkedGraph
-	tlc Example6_Bound
+	tlc -deadlock Example6_Bound
 	tlc -deadlock Example7_ArcWeights
-	tlc Example8_Dining
+	tlc -deadlock Example8_Dining
+	# Workflow Nets
+	tlc -deadlock WFNet_Example.tla
 
 tlatex:
 	tlatex -shade -latexCommand "pdflatex" -latexOutputExt "pdf" -metadir "docs" PetriNet
@@ -22,6 +24,9 @@ tlatex:
 	tlatex -shade -latexCommand "pdflatex" -latexOutputExt "pdf" -metadir "docs" Example6_Bound
 	tlatex -shade -latexCommand "pdflatex" -latexOutputExt "pdf" -metadir "docs" Example7_ArcWeights
 	tlatex -shade -latexCommand "pdflatex" -latexOutputExt "pdf" -metadir "docs" Example8_Dining
+	# Workflow Nets
+	tlatex -shade -latexCommand "pdflatex" -latexOutputExt "pdf" -metadir "docs" WFNet
+	tlatex -shade -latexCommand "pdflatex" -latexOutputExt "pdf" -metadir "docs" WFNet_Example
 	# tlatex keeps around the pdf files in the root even though metadir is set...
 	rm *.pdf
 

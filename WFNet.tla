@@ -1,3 +1,7 @@
+Warn: Incomplete. "No Dead Transitions" cannot currently be validated.
+
+We need to assert that something is true in at least 1 possible behavior. TLC does not have the ability to make this type of assertion (I think). I think we would need to implement this one manually outside of TLA+ managing states which ruins the elegance of the current specification.
+
 ------------------------------- MODULE WFNet -------------------------------------
 \**********************************************************************************
 \* From "Soundness of workflow nets: Classification, decidability, and analysis" by WMP 
@@ -14,7 +18,7 @@
 \* - b. Proper completion
 \* - c. No dead transitions
 \*
-\* I am assuming a conventional restriction: only 1 source token and "safe", no arc weights.
+\* I am assuming a conventional restriction: only 1 source token, "safe", and no arc weights.
 \**********************************************************************************
 
 \**********************************************************************************
@@ -74,7 +78,7 @@ OptionToComplete == <>[](Marking = [p \in {SinkPlace} |-> 1]^*)
 \* behavior. TLC does not have the ability to make this type of assertion (I think). I
 \* think we would need to implement this one manually outside of TLA+ managing states
 \* which ruins the elegance of the current specification.
-NoDeadTransitions == \A t \in Transitions: ~[](~Enabled(t)) \* this is wrong :(
+\* NoDeadTransitions == \A t \in Transitions: ~[](~Enabled(t)) \* This is wrong :(
 
 ClassicallySound == /\ OptionToComplete
                     \* /\ NoDeadTransitions

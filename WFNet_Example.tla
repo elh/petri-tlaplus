@@ -1,8 +1,12 @@
+Warn: Incomplete. "No Dead Transitions" cannot currently be validated.
+
+We need to assert that something is true in at least 1 possible behavior. TLC does not have the ability to make this type of assertion (I think). I think we would need to implement this one manually outside of TLA+ managing states which ruins the elegance of the current specification.
+
 ----------------------------- MODULE WFNet_Example --------------------------------
 
 LOCAL INSTANCE TLC
 
-\* \* simple case
+\* \* Simple case
 \* Places == {"source", "p1", "sink"}
 \* Transitions == {"t1", "t2"}
 \* Arcs == [
@@ -13,8 +17,8 @@ LOCAL INSTANCE TLC
 \*     t2 |-> {"sink"}
 \* ]
 
-\* \* net that breaks NoDeadTransitions. we can't check across all behaviors
-\* this doesn't pass right now
+\* \* Net that breaks NoDeadTransitions. We can't check across all behaviors
+\* so this cannot be enforced correctly
 \* Places == {"source", "p1", "p2", "sink"}
 \* Transitions == {"t1", "t2", "t3", "t4"}
 \* Arcs == [
@@ -28,7 +32,7 @@ LOCAL INSTANCE TLC
 \*     t4 |-> {"sink"}
 \* ]
 
-\* requires strong fairness to show "option to complete"
+\* Requires strong fairness to show "option to complete"
 Places == {"source", "p1", "sink"}
 Transitions == {"t1", "t2", "t3"}
 Arcs == [
