@@ -26,3 +26,9 @@ make clean     # delete all generated files
 ```
 
 See `PetriNet.tla` for the core module. See the `Example_*.tla`/`Example_*.cfg` files for usage and an introduction to some Petri net concepts.
+
+## Excerpt: Transition "Fire" Action
+
+<p align="center">
+    <img src="https://github.com/elh/petri-tlaplus/assets/1035393/e826c059-84f4-4836-87c6-62e53df056f0">
+</p>
