@@ -1,4 +1,4 @@
-See example specifications that use this module.
+See example specifications.
 
 ------------------------------- MODULE PetriNet -----------------------------------
 \**********************************************************************************
